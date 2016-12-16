@@ -1,17 +1,32 @@
 import numpy as np
 
 class SudokuSolver:
-	def __init__(self,grid):
-		self.grid = grid
-		self.grid.printGrid()
+	def __init__(self,sd):
+		self.sd = sd
+		self.sd.printGrid()
+		self.backtrackingSolver()
+		print "\n\nSolved:"
+		self.sd.printGrid()
 
-	def Solver(self,grid):
+	def backtrackingSolver(self):
 		rowCol = [0,0]
 
-		if self.grid.getFirstEmptyGrid(rowCol):
+		if not self.sd.getFirstEmptyGrid(rowCol):
 			return True
 
-		#TO be continued
+		row = rowCol[0]
+		col = rowCol[1]
+
+		for num in range(1,10):
+			if self.sd.check_location_is_safe(row,col,num):
+				#assign
+				self.sd.grid[row][col] = num
+
+				if(self.backtrackingSolver()):
+					return True
+
+				self.sd.grid[row][col] = 0
+		return False
 
 
 class SudokuGrid:
@@ -28,7 +43,6 @@ class SudokuGrid:
 	def printGrid(self):
 		for row in self.grid:
 			print ("{} {} {} {} {} {} {} {} {}".format(*row))
-		self.getFirstEmptyGrid()
 
 
 	def getGrid(self):
@@ -54,17 +68,16 @@ class SudokuGrid:
 			return 0 if val < 3 else 3 if val < 6 else 6
 		row = startingPoint(row)
 		col = startingPoint(col)
-		print num
 		if num in [j for i in self.grid[row:row+3,col:col+3].tolist() for j in i]:
 			return True
 		else:
 			return False
 
-	def check_number_is_safe(self,row,col,num):
+	def check_location_is_safe(self,row,col,num):
 		# Must check it's own box, row and column
 		#If any return True, means number is not valid
-		return not(checkColUsed or checkRowUsed or checkBoxUsed)
-		#Returns TRUE if number is VALID
+		return not(self.checkColUsed(col,num) or self.checkRowUsed(row,num) or self.checkBoxUsed(row,col,num))
+		#Returns TRUE if location is VALID
 
 	def gridIsEmpty(self,row,col):
 		return True if self.grid[row][col] == 0 else False
