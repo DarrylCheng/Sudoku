@@ -92,6 +92,22 @@ public:
 		//Returns false if NOT valid
 		return checkBoxIfValid(row,col,num) && checkColumnIfValid(col,num) && checkRowIfValid(row,num);
 	}
+
+	//Returns first empty cell (starting from row - 0, col - 0)
+	//Used for the backtracking algorithm
+	int* getFirstEmptyCell(){
+		int rowAndColumn[2];
+		for(int row = 0; row < dimension; row++){
+			for(int col = 0; col < dimension; col++){
+				if(board[row][col] == 0){
+					rowAndColumn[0] = row;
+					rowAndColumn[1] = col;
+					return rowAndColumn;
+				}
+			}
+		}
+	}
+
 };
 
 
