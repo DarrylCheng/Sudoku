@@ -86,26 +86,35 @@ public:
 		return true;
 	}
 
+	//Returns true if cell is empty (0)
+	bool checkIfCellEmpty(int row, int col){
+		if(board[row][col] == 0)
+			return true;
+		return false;
+	}
+
 	//One call method to call the other 3 methods
 	//Checks the sudoku rules if the number is valid on that board location
 	bool checkLocationIfValid(int row, int col, int num){
 		//Returns false if NOT valid
-		return checkBoxIfValid(row,col,num) && checkColumnIfValid(col,num) && checkRowIfValid(row,num);
+		return checkIfCellEmpty(row,col)?checkBoxIfValid(row,col,num)?checkColumnIfValid(col,num)?checkRowIfValid(row,num):false:false:false;
 	}
 
-	//Returns first empty cell (starting from row - 0, col - 0)
+	//Pass in row and col as reference.
 	//Used for the backtracking algorithm
-	int* getFirstEmptyCell(){
+	//Returns false if no empty cell left.
+	bool getFirstEmptyCell(int& row, int& col){
 		int rowAndColumn[2];
-		for(int row = 0; row < dimension; row++){
-			for(int col = 0; col < dimension; col++){
-				if(board[row][col] == 0){
-					rowAndColumn[0] = row;
-					rowAndColumn[1] = col;
-					return rowAndColumn;
+		for(int x = 0; x < dimension; x++){
+			for(int y = 0; y < dimension; y++){
+				if(board[x][y] == 0){
+					row = x;
+					col = y;
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 };
