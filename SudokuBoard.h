@@ -1,27 +1,31 @@
 #ifndef SUDOKU_BOARD_H
 #define SUDOKU_BOARD_H
 #include <iostream>
+#include <cstdlib>
+#include <windows.h>
 using namespace std;
 
 class SudokuBoard{
 	int ** board;
 	int dimension;
+	int numOfEmptyCells;
 public:
 	SudokuBoard():dimension(9){
 		initializeBoard(); // 9x9
+		numOfEmptyCells = dimension*dimension;
 	}
 
 	void initializeBoard(){
 		//Used for testing the solving algorithm
-		int tempValues[][9] = 	{{3,0,6,5,0,8,4,0,0}
-								,{5,2,0,0,0,0,0,0,0}
-								,{0,8,7,0,0,0,0,3,1}
-								,{0,0,3,0,1,0,0,8,0}
-								,{9,0,0,8,6,3,0,0,5}
-								,{0,5,0,0,9,0,6,0,0}
-								,{1,3,0,0,0,0,2,5,0}
-								,{0,0,0,0,0,0,0,7,4}
-								,{0,0,5,2,0,6,3,0,0}};
+		// int tempValues[][9] = 	{{3,0,6,5,0,8,4,0,0}
+		// 						,{5,2,0,0,0,0,0,0,0}
+		// 						,{0,8,7,0,0,0,0,3,1}
+		// 						,{0,0,3,0,1,0,0,8,0}
+		// 						,{9,0,0,8,6,3,0,0,5}
+		// 						,{0,5,0,0,9,0,6,0,0}
+		// 						,{1,3,0,0,0,0,2,5,0}
+		// 						,{0,0,0,0,0,0,0,7,4}
+		// 						,{0,0,5,2,0,6,3,0,0}};
 
 		board = new int*[dimension];
 		for(int i = 0; i < dimension; i++){
@@ -29,18 +33,24 @@ public:
 
 			//Temporary for tempValues assignment
 			for(int y = 0; y < dimension; y++){
-				board[i][y] = tempValues[i][y];
+				board[i][y] = 0;
+				// board[i][y] = tempValues[i][y];
 			}
 		}
 	}
 
 	void printBoard(){
+		// system("cls");
 		for(int x = 0; x < 9; x++){
 			for(int y = 0; y < 9; y++){
-				cout << board[x][y] << " ";
+				if (board[x][y] == 0)
+					cout << "_ ";
+				else
+					cout << board[x][y] << " ";
 			}
 			cout << endl;
 		}
+		// Sleep(700);
 	}
 
 	bool checkColumnIfValid(int col, int num){
@@ -95,7 +105,7 @@ public:
 
 	//One call method to call the other 3 methods
 	//Checks the sudoku rules if the number is valid on that board location
-	bool checkLocationIfValid(int row, int col, int num){
+	bool checkCellIfValid(int row, int col, int num){
 		//Returns false if NOT valid
 		return checkIfCellEmpty(row,col)?checkBoxIfValid(row,col,num)?checkColumnIfValid(col,num)?checkRowIfValid(row,num):false:false:false;
 	}
@@ -115,6 +125,20 @@ public:
 			}
 		}
 		return false;
+	}
+
+	void assignValue(int row, int col, int num){
+		board[row][col] = num;
+		if(num == 0)
+			numOfEmptyCells++;
+		else
+			numOfEmptyCells--;
+	}
+
+	bool boardFilled(){
+		if (numOfEmptyCells > 0)
+			return false;
+		return true;
 	}
 
 };
