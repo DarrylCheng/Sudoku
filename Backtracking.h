@@ -3,17 +3,27 @@
 #include "SudokuBoard.h"
 
 class Backtracking{
-	SudokuBoard sb;
+	int numOfRecursions;
 public:
-	Backtracking(SudokuBoard sb):sb(sb){
-		backtrackingSolver();
-		sb.printBoard();
+	//Returns true if board is solvable
+	bool solve(SudokuBoard& sb){
+		numOfRecursions = 0;
+		return backtrackingSolver(sb,-1);
 	}
 
-	bool backtrackingSolver(){
+	//During generation of sudoku, some board might take forever to get solved
+	bool tryToSolve(SudokuBoard& sb){
+		numOfRecursions = 0;
+		return backtrackingSolver(sb,1000000);
+	}
+
+	bool backtrackingSolver(SudokuBoard& sb, int limit){
 		int row = 0;
 		int col = 0;
-
+		numOfRecursions++;
+		if(limit != -1 && numOfRecursions > limit)
+			return false;
+		// sb.printBoard();
 		if (!sb.getFirstEmptyCell(row,col)){
 			return true; //Base case
 			//If no free cell left, sudoku is solved
@@ -22,14 +32,14 @@ public:
 
 		//9 needs to be replaced with sb.getDimSize()
 		for(int num = 1; num <= 9; num++){
-			if(sb.checkLocationIfValid(row,col,num)){
+			if(sb.checkCellIfValid(row,col,num)){
 				//If num is can be placed on that cell, assign to it.
 				sb.assignValue(row,col,num);
 
 				//Go deeper into the board
 				//Returns false (backtrack) if cell cannot be assigned
 				//any number
-				if(backtrackingSolver()){
+				if(backtrackingSolver(sb,limit)){
 					return true; //Base case
 				}
 
