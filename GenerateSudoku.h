@@ -4,18 +4,40 @@
 #include <ctime>
 #include "Backtracking.h"
 #include "SudokuBoard.h"
+#include "DifficultyLevels/SudokuDifficulty.h"
+#include "DifficultyLevels/Level.h"
+#include "DifficultyLevels/Easy.h"
+#include "DifficultyLevels/Medium.h"
+#include "DifficultyLevels/Difficult.h"
+#include "DifficultyLevels/Evil.h"
 
 class GenerateSudoku{
 public:
-	SudokuBoard generate(){
+	SudokuBoard generate(Level level){
 		// Returns a randomly generated sudoku board
-		SudokuBoard sb;
-		while(!lasVegas(sb)){}
+		SudokuBoard board;
+		while(!lasVegas(board)){}
 
-		//Continue here
-		//Dig holes
-		
-		return sb;
+		SudokuDifficulty * sd;
+		switch(level){
+			case Level::EASY:
+				sd = new Easy();
+				break;
+			case Level::MEDIUM:
+				sd = new Medium();
+				break;
+			case Level::DIFFICULT:
+				sd = new Difficult();
+				break;
+			case Level::EVIL:
+				sd = new Evil();
+				break;
+		}
+
+		//In case if digging holes will cause the sudoku to be unsolvable, might need some modifications here
+		sd->digHoles(board);
+
+		return board;
 	}
 
 	bool lasVegas(SudokuBoard& sb){
@@ -42,8 +64,7 @@ public:
 
 		//Try to solve it
 		Backtracking bt;
-		bool solved = bt.tryToSolve(sb);
-		return solved;
+		return bt.tryToSolve(sb);
 	}
 };
 
