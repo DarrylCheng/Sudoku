@@ -2,6 +2,7 @@
 #include "SudokuBoard.h"
 #include "Backtracking.h"
 #include "GenerateSudoku.h"
+#include "DifficultyLevels/Level.h"
 #include <windows.h>
 using namespace std;
 //Compile in C++11 --std=c++11
@@ -19,9 +20,9 @@ int main(){
 	SudokuBoard yo;
 	while(true){
 		//Test the generate function for random complete sudoku board.
-		yo = sb.generate();
+		yo = sb.generate(Level::MEDIUM);
 		yo.printBoard();
 		cout << endl;
-		Sleep(600);
+		Sleep(700);
 	}
 }
