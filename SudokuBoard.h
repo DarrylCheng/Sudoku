@@ -135,10 +135,24 @@ public:
 			numOfEmptyCells--;
 	}
 
+	bool deleteValue(int row, int col){
+		if(board[row][col] == 0)
+			return false;
+		else{
+			numOfEmptyCells++;
+			board[row][col] == 0;
+			return true;
+		}
+	}
+
 	bool boardFilled(){
 		if (numOfEmptyCells > 0)
 			return false;
 		return true;
+	}
+
+	int getDimension(){
+		return dimension;
 	}
 
 };
