@@ -51,7 +51,7 @@ public:
 			//Insert of random inserting, each row is guarenteed a random cell.
 			//Reduces the probability having a board that takes more than average time to solve.
 			R = rand()%81;
-			num = rand()%9;
+			num = 1 + rand()%9;
 			row = R / 9;
 			col = R % 9;
 
