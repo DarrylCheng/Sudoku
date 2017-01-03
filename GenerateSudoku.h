@@ -45,7 +45,7 @@ public:
 		sb.initializeBoard();
 
 		srand(time(NULL));
-		int R, col, row,num, givens = 11; //Randomly insert in 9 cells
+		int R, col, row,num, givens = 11; //Randomly insert in 11 cells
 
 		for(int i=0; i< givens; i++){ 
 			//Insert of random inserting, each row is guarenteed a random cell.
