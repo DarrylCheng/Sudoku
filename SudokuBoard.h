@@ -136,11 +136,11 @@ public:
 	}
 
 	bool deleteValue(int row, int col){
-		if(board[row][col] == 0)
+		if(board[row][col] == 0){
 			return false;
-		else{
+		}else{
 			numOfEmptyCells++;
-			board[row][col] == 0;
+			board[row][col] = 0;
 			return true;
 		}
 	}
