@@ -6,6 +6,9 @@ class SudokuDifficulty{
 	//Interface for sudoku difficulty level
 public:
 	virtual bool digHoles(SudokuBoard& sb) = 0;
+	// bool diggingRules(SudokuBoard sb, int row, int col, int limit){
+		
+	// }
 };
 
 #endif
