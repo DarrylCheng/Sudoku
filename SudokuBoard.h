@@ -3,46 +3,37 @@
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
+#include <cstdlib> //srand and rand
+#include "DifficultyLevels/Level.h"
 using namespace std;
 
 class SudokuBoard{
 	int ** board;
 	int dimension;
-	int numOfEmptyCells;
 public:
-	SudokuBoard():dimension(9){
-		initializeBoard(); // 9x9
-		numOfEmptyCells = dimension*dimension;
-	}
-
-	void initializeBoard(){
-		//Used for testing the solving algorithm
-		// int tempValues[][9] = 	{{3,0,6,5,0,8,4,0,0}
-		// 						,{5,2,0,0,0,0,0,0,0}
-		// 						,{0,8,7,0,0,0,0,3,1}
-		// 						,{0,0,3,0,1,0,0,8,0}
-		// 						,{9,0,0,8,6,3,0,0,5}
-		// 						,{0,5,0,0,9,0,6,0,0}
-		// 						,{1,3,0,0,0,0,2,5,0}
-		// 						,{0,0,0,0,0,0,0,7,4}
-		// 						,{0,0,5,2,0,6,3,0,0}};
-
+	SudokuBoard(int dimension=9):dimension(dimension){
+		// if(dimension%3 != 0){
+		// 	throw dimension;
+		// }
 		board = new int*[dimension];
 		for(int i = 0; i < dimension; i++){
 			board[i] = new int[dimension];
+		}
+		initializeBoard(); // 9x9
+	}
 
-			//Temporary for tempValues assignment
+	void initializeBoard(){
+		for(int i = 0; i < dimension; i++){
 			for(int y = 0; y < dimension; y++){
 				board[i][y] = 0;
-				// board[i][y] = tempValues[i][y];
 			}
 		}
 	}
 
 	void printBoard(){
 		// system("cls");
-		for(int x = 0; x < 9; x++){
-			for(int y = 0; y < 9; y++){
+		for(int x = 0; x < dimension; x++){
+			for(int y = 0; y < dimension; y++){
 				if (board[x][y] == 0)
 					cout << "_ ";
 				else
@@ -112,7 +103,7 @@ public:
 
 	//Pass in row and col as reference.
 	//Used for the backtracking algorithm
-	//Returns false if no empty cell left.
+	//Returns false if no empty cell left. 
 	bool getFirstEmptyCell(int& row, int& col){
 		int rowAndColumn[2];
 		for(int x = 0; x < dimension; x++){
@@ -129,32 +120,20 @@ public:
 
 	void assignValue(int row, int col, int num){
 		board[row][col] = num;
-		if(num == 0)
-			numOfEmptyCells++;
-		else
-			numOfEmptyCells--;
 	}
 
 	bool deleteValue(int row, int col){
 		if(board[row][col] == 0){
 			return false;
 		}else{
-			numOfEmptyCells++;
 			board[row][col] = 0;
 			return true;
 		}
 	}
 
-	bool boardFilled(){
-		if (numOfEmptyCells > 0)
-			return false;
-		return true;
-	}
-
 	int getDimension(){
 		return dimension;
 	}
-
 };
 
 

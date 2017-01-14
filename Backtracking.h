@@ -1,6 +1,8 @@
 #ifndef BACKTRACKING_H
 #define BACKTRACKING_H
 #include "SudokuBoard.h"
+#include <iostream>
+using namespace std;
 
 class Backtracking{
 	int numOfRecursions;
@@ -18,6 +20,8 @@ public:
 	}
 
 	bool backtrackingSolver(SudokuBoard& sb, int limit){
+		// sb.printBoard();
+		// cout << endl << endl;
 		int row = 0;
 		int col = 0;
 		numOfRecursions++;
@@ -31,7 +35,7 @@ public:
 		}
 
 		//9 needs to be replaced with sb.getDimSize()
-		for(int num = 1; num <= 9; num++){
+		for(int num = 1; num <= sb.getDimension(); num++){
 			if(sb.checkCellIfValid(row,col,num)){
 				//If num is can be placed on that cell, assign to it.
 				sb.assignValue(row,col,num);

@@ -3,19 +3,19 @@
 #include <cstdlib> //srand and rand
 #include <ctime>
 #include "Backtracking.h"
-#include "SudokuBoard.h"
 #include "DifficultyLevels/SudokuDifficulty.h"
 #include "DifficultyLevels/Level.h"
 #include "DifficultyLevels/Easy.h"
 #include "DifficultyLevels/Medium.h"
 #include "DifficultyLevels/Difficult.h"
 #include "DifficultyLevels/Evil.h"
+#include "SudokuBoard.h"
 
 class GenerateSudoku{
 public:
-	SudokuBoard generate(Level level){
+	SudokuBoard generate(Level level, int dimension){
 		// Returns a randomly generated sudoku board
-		SudokuBoard board;
+		SudokuBoard board(dimension);
 		while(!lasVegas(board)){}
 
 		SudokuDifficulty * sd;
@@ -43,17 +43,17 @@ public:
 	bool lasVegas(SudokuBoard& sb){
 		//Create a random pattern, and attempt to solve it.
 		sb.initializeBoard();
-
+		int dim = sb.getDimension();
 		srand(time(NULL));
 		int R, col, row,num, givens = 11; //Randomly insert in 11 cells
 
 		for(int i=0; i< givens; i++){ 
 			//Insert of random inserting, each row is guarenteed a random cell.
 			//Reduces the probability having a board that takes more than average time to solve.
-			R = rand()%81;
-			num = 1 + rand()%9;
-			row = R / 9;
-			col = R % 9;
+			R = rand()%(dim*dim);
+			num = 1 + rand()%dim;
+			row = R / dim;
+			col = R % dim;
 
 			if(sb.checkCellIfValid(row,col,num)){
 				sb.assignValue(row,col,num);
