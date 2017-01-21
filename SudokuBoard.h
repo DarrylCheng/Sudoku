@@ -3,7 +3,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <windows.h>
+#include <iomanip>
 #include <cstdlib> //srand and rand
+#include "Configuration.h"
 #include "DifficultyLevels/Level.h"
 using namespace std;
 
@@ -12,9 +14,6 @@ class SudokuBoard{
 	int dimension;
 public:
 	SudokuBoard(int dimension=9):dimension(dimension){
-		// if(dimension%3 != 0){
-		// 	throw dimension;
-		// }
 		board = new int*[dimension];
 		for(int i = 0; i < dimension; i++){
 			board[i] = new int[dimension];
@@ -33,14 +32,27 @@ public:
 	void printBoard(){
 		// system("cls");
 		for(int x = 0; x < dimension; x++){
+			if(x%boxSizeY == 0){
+				cout << "|" << setfill('-') << setw(dimension*2+dimension*2/boxSizeX+1) <<"|\n";
+			}
 			for(int y = 0; y < dimension; y++){
+				if(y%boxSizeX == 0){
+					cout << "| ";
+				}
 				if (board[x][y] == 0)
 					cout << "_ ";
-				else
-					cout << board[x][y] << " ";
+				else{
+					if(board[x][y] < 10)
+						cout << board[x][y] << " ";
+					else{
+						char letter = board[x][y]+55;
+						cout << letter << " ";
+					}
+				}
 			}
-			cout << endl;
+			cout << "|" << endl;
 		}
+		cout << "|" << setfill('-') << setw(dimension*2+dimension*2/boxSizeX+1) <<"|\n";
 		// Sleep(700);
 	}
 
@@ -74,11 +86,10 @@ public:
 		//^Sudoku rules, no duplicate values.
 		//Return false if not valid
 
-		//boxSize needs to be dynamic when increasing sudoku dimension
-		int boxSize = 3; 
+		//BoxSizes from configuration
 
-		for (int x = (row/boxSize)*boxSize; x < (row/boxSize)*boxSize+boxSize; ++x){
-			for (int y = (col/boxSize)*boxSize; y < (col/boxSize)*boxSize+boxSize; ++y){
+		for (int x = (row/boxSizeY)*boxSizeY; x < (row/boxSizeY)*boxSizeY+boxSizeY; ++x){
+			for (int y = (col/boxSizeX)*boxSizeX; y < (col/boxSizeX)*boxSizeX+boxSizeX; ++y){
 				if (board[x][y] == num){
 					return false;
 				}
