@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <windows.h>
 #include <iomanip>
+#include <set>
 #include <cstdlib> //srand and rand
 #include "Configuration.h"
 #include "DifficultyLevels/Level.h"
@@ -19,6 +20,20 @@ public:
 			board[i] = new int[dimension];
 		}
 		initializeBoard(); // 9x9
+	}
+
+	SudokuBoard(SudokuBoard& sb){
+		dimension = sb.getDimension();
+		int** tempBoard = sb.getBoard();
+		board = new int*[dimension];
+		for(int i = 0; i < dimension; i++){
+			board[i] = new int[dimension];
+		}
+		for(int i = 0; i < dimension; i++){
+			for(int y = 0; y < dimension; y++){
+				board[i][y] = tempBoard[i][y];
+			}
+		}
 	}
 
 	void initializeBoard(){
@@ -144,6 +159,39 @@ public:
 
 	int getDimension(){
 		return dimension;
+	}
+
+	set<int> possibleValues(int row, int col){
+		set<int> possibleVals;
+
+		for(int i = 1; i <= dimension; ++i){
+			possibleVals.insert(i);
+		}
+
+		for (int x = (row/boxSizeY)*boxSizeY; x < (row/boxSizeY)*boxSizeY+boxSizeY; ++x){
+			for (int y = (col/boxSizeX)*boxSizeX; y < (col/boxSizeX)*boxSizeX+boxSizeX; ++y){
+				if (board[x][y] != 0){
+					possibleVals.erase(board[x][y]);
+				}
+			}
+		}
+
+		for(int y = 0; y < dimension; y++){
+			if (board[y][col] != 0){
+				possibleVals.erase(board[y][col]);
+			}
+		}
+		for(int x = 0; x < dimension; x++){
+			if (board[row][x] != 0){
+				possibleVals.erase(board[row][x]);
+			}
+		}
+
+		return possibleVals;
+	}
+
+	int** getBoard(){
+		return board;
 	}
 };
 
