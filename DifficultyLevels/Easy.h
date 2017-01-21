@@ -10,11 +10,13 @@ class Easy: public SudokuDifficulty{
 		//Randomly remove 37 cell locations.
 		srand(time(NULL));
 		vector<int> index;
-
-		for(int i=0; i < sb.getDimension()*sb.getDimension() ; ++i){
+		int dim = sb.getDimension()*sb.getDimension();
+		index.reserve(dim);
+		
+		for(int i=0; i < dim ; ++i){
 			index.push_back(i);
 		}
-		for(int i=0; i < sb.getDimension()*sb.getDimension()/2.18 ; ++i){
+		for(int i=0; i < dim/2.18 ; ++i){
 			int R = rand()%index.size();
 			int rowIndex = index[R]%sb.getDimension();
 			int colIndex = index[R]/sb.getDimension();

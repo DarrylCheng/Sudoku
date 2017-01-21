@@ -10,11 +10,13 @@ class Evil: public SudokuDifficulty{
 		//Randomly remove 64 cell locations.
 		srand(time(NULL));
 		vector<int> index;
+		int dim = sb.getDimension()*sb.getDimension();
+		index.reserve(dim);
 
-		for(int i=0; i < sb.getDimension()*sb.getDimension() ; ++i){
+		for(int i=0; i < dim ; ++i){
 			index.push_back(i);
 		}
-		for(int i=0; i < sb.getDimension()*sb.getDimension()/1.26; ++i){
+		for(int i=0; i < dim/1.26; ++i){
 			int R = rand()%index.size();
 			int rowIndex = index[R]%sb.getDimension();
 			int colIndex = index[R]/sb.getDimension();
