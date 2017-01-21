@@ -6,6 +6,7 @@
 #include "DifficultyLevels/Level.h"
 // #include <windows.h>
 #include <chrono>
+#include "ConstraintP.h"
 // #include <fstream>
 using namespace std;
 //Compile in C++11 --std=c++11
@@ -32,25 +33,40 @@ int main(int argc, char * argv[]){
 
 	//Generate sudoku
 	auto start = chrono::system_clock::now();
-	SudokuPuzzle pz(Level::MEDIUM,dimension);
+	SudokuPuzzle pz1(Level::EASY,dimension);
+	SudokuPuzzle pz2(pz1);
 	auto end = chrono::system_clock::now();
 	chrono::duration<double> duration = end - start;
-	pz.print();
+	pz2.print();
 	cout << "Time elapsed (Generating): " << duration.count() << "\n\n";
 
 	//Try solving with backtracking algorithm
 	Backtracking bt;
 	start = chrono::system_clock::now();
-	bool solvable = bt.solve(pz.getBoard()); //bt solving requires SudokuBoard as parameter instead of SudokuPuzzle
+	bool solvable = bt.solve(pz1.getBoard()); //bt solving requires SudokuBoard as parameter instead of SudokuPuzzle
 	end = chrono::system_clock::now();
 	duration = end - start;
 	if(solvable){
-		pz.print();
-		cout << "Time elapsed (Solving): " << duration.count() << endl;
+		pz1.print();
+		cout << "Time elapsed (BTSolving): " << duration.count() << endl;
 	} else {
 		cout << "Sudoku board is not solvable.\n";
 	}
 
+	//Test constraint propogation
+	ConstraintP cp;
+	start = chrono::system_clock::now();
+	cp.populateCells(pz2.getBoard());
+	bool lol = cp.assignValueWithOneChoice(pz2.getBoard());
+	if(!lol){
+		// cout << "Continue with backtracking\n";
+		Backtracking bt;
+		bt.solve(pz2.getBoard());
+	}
+	end = chrono::system_clock::now();
+	pz2.print();
+	duration = end - start;
+	cout << "Time elapsed (CPSolving): " << duration.count() << endl;
 
 
 
