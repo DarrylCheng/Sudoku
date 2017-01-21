@@ -2,6 +2,7 @@
 #define GENERATE_SUDOKU_H
 #include <cstdlib> //srand and rand
 #include <ctime>
+#include "Configuration.h"
 #include "Backtracking.h"
 #include "DifficultyLevels/SudokuDifficulty.h"
 #include "DifficultyLevels/Level.h"
@@ -45,9 +46,9 @@ public:
 		sb.initializeBoard();
 		int dim = sb.getDimension();
 		srand(time(NULL));
-		int R, col, row,num, givens = 11; //Randomly insert in 11 cells
+		int R, col, row,num; //Randomly insert in 11 cells
 
-		for(int i=0; i< givens; i++){ 
+		for(int i=0; i< givens; i++){ //Givens is from Configuration
 			//Insert of random inserting, each row is guarenteed a random cell.
 			//Reduces the probability having a board that takes more than average time to solve.
 			R = rand()%(dim*dim);
@@ -64,7 +65,7 @@ public:
 
 		//Try to solve it
 		Backtracking bt;
-		return bt.tryToSolve(sb);
+		return bt.solve(sb);
 	}
 };
 
