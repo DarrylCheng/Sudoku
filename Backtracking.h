@@ -2,39 +2,26 @@
 #define BACKTRACKING_H
 #include "SudokuBoard.h"
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
 class Backtracking{
-	int numOfRecursions;
 public:
 	//Returns true if board is solvable
 	bool solve(SudokuBoard& sb){
-		numOfRecursions = 0;
-		return backtrackingSolver(sb,-1);
+		return backtrackingSolver(sb);
 	}
 
-	//During generation of sudoku, some board might take forever to get solved
-	bool tryToSolve(SudokuBoard& sb){
-		numOfRecursions = 0;
-		return backtrackingSolver(sb,1000000);
-	}
-
-	bool backtrackingSolver(SudokuBoard& sb, int limit){
-		// sb.printBoard();
-		// cout << endl << endl;
+	bool backtrackingSolver(SudokuBoard& sb){
 		int row = 0;
 		int col = 0;
-		numOfRecursions++;
-		if(limit != -1 && numOfRecursions > limit)
-			return false;
-		// sb.printBoard();
+
 		if (!sb.getFirstEmptyCell(row,col)){
 			return true; //Base case
 			//If no free cell left, sudoku is solved
 			//else row and col is updated with the free cell
 		}
 
-		//9 needs to be replaced with sb.getDimSize()
 		for(int num = 1; num <= sb.getDimension(); num++){
 			if(sb.checkCellIfValid(row,col,num)){
 				//If num is can be placed on that cell, assign to it.
@@ -43,7 +30,7 @@ public:
 				//Go deeper into the board
 				//Returns false (backtrack) if cell cannot be assigned
 				//any number
-				if(backtrackingSolver(sb,limit)){
+				if(backtrackingSolver(sb)){
 					return true; //Base case
 				}
 
