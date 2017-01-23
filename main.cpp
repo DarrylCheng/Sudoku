@@ -45,6 +45,18 @@ int main(int argc, char * argv[]){
 	pz2.print();
 	cout << "Time elapsed (Generating): " << durationGenerate.count() << "\n\n";
 
+	//Test constraint propogation
+	ConstraintP cp;
+	start = chrono::system_clock::now();
+	bool solvableCP = cp.solve(pz2.getBoard());
+	end = chrono::system_clock::now();
+	chrono::duration<double> durationCP = end - start;
+	if(solvableCP){
+		pz2.print();
+		cout << "Time elapsed (CPSolving): " << durationCP.count() << endl;
+	} else {
+		cout << "Sudoku board is not solvable.\n";
+	}
 	//Try solving with backtracking algorithm
 	Backtracking bt;
 	start = chrono::system_clock::now();
@@ -58,31 +70,19 @@ int main(int argc, char * argv[]){
 		cout << "Sudoku board is not solvable.\n";
 	}
 
-	//Test constraint propogation
-	ConstraintP cp;
-	start = chrono::system_clock::now();
-	bool solvableCP = cp.solve(pz2.getBoard());
-	end = chrono::system_clock::now();
-	chrono::duration<double> durationCP = end - start;
-	if(solvableCP){
-		pz2.print();
-		cout << "Time elapsed (CPSolving): " << durationCP.count() << endl;
-	} else {
-		cout << "Sudoku board is not solvable.\n";
-	}
 
-	ofstream file;
-	file.open("Results.csv", ios::app);
-	file << backup << "," << pz1 << "," << dimension << "x" << dimension << "," << boxSizeX << "," << boxSizeY;
-	if(level == Level::EASY)
-		file << "," << "EASY";
-	else if (level == Level::MEDIUM)
-		file << "," << "MEDIUM";
-	else if (level == Level::DIFFICULT)
-		file << "," << "DIFFICULT";
-	else 
-		file << "," << "EVIL";
-	file << "," << durationGenerate.count() << "," << durationBT.count() << "," << solvableBT << "," << durationCP.count() << "," << solvableCP;
-	file << endl;
-	file.close();
+	// ofstream file;
+	// file.open("Results.csv", ios::app);
+	// file << backup << "," << pz1 << "," << dimension << "x" << dimension << "," << boxSizeX << "," << boxSizeY;
+	// if(level == Level::EASY)
+	// 	file << "," << "EASY";
+	// else if (level == Level::MEDIUM)
+	// 	file << "," << "MEDIUM";
+	// else if (level == Level::DIFFICULT)
+	// 	file << "," << "DIFFICULT";
+	// else 
+	// 	file << "," << "EVIL";
+	// file << "," << durationGenerate.count() << "," << durationBT.count() << "," << solvableBT << "," << durationCP.count() << "," << solvableCP;
+	// file << endl;
+	// file.close();
 }
