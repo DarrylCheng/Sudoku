@@ -193,6 +193,10 @@ public:
 	int** getBoard(){
 		return board;
 	}
+
+	int getValue(int row, int col){
+		return board[row][col]; //YOLO no exception handling
+	}
 };
 
 
