@@ -6,6 +6,8 @@
 #include "Backtracking.h"
 #include "Configuration.h"
 #include "SudokuBoard.h"
+#include <chrono>
+#include <iostream>
 using namespace std; 
 //Constraint Propogation
 //If a cell have only one possible value, delete it from its peers and place the value in the cell.
@@ -49,50 +51,51 @@ public:
 		bool solvable = true;
 		populateCells(sb);
 		if(!assignValueWithOneChoice(sb)){
-			Backtracking bt;
-			solvable = bt.solve(sb);
+			// Backtracking bt;
+			// solvable = bt.solve(sb);
 		}
 		cells.clear();
 		return solvable;
 	}
 
+	bool isUnique(SudokuBoard& sb){
+		populateCells(sb);
+		if(!assignValueWithOneChoice(sb)){
+			return false;
+		}
+		cells.clear();
+		return true;
+	}
+
 	void populateCells(SudokuBoard sb){
-		SudokuBoard copy(sb);
-		int dimension = copy.getDimension();
+		cells.clear();
+		int dimension = sb.getDimension();
 		int row,col;
 		set<int> possibleVals;
-		while(copy.getFirstEmptyCell(row,col)){
-			possibleVals = copy.possibleValues(row,col);
+		while(sb.getFirstEmptyCell(row,col)){
+			possibleVals = sb.possibleValues(row,col);
 			cells.push_back(Cell(row,col,possibleVals));
 			push_heap(cells.begin(),cells.end(), [](const Cell& lhs, const Cell& rhs){
 						return lhs.numOfChoice() < rhs.numOfChoice();});
-			copy.assignValue(row,col,-1);
+			sb.assignValue(row,col,-1);
 		}
 		sort_heap(cells.begin(),cells.end(), [](const Cell& lhs, const Cell& rhs){
 		return lhs.numOfChoice() < rhs.numOfChoice();});
 	}
 
 	void updateCells(int row, int col, int numRemoved){
-		auto updateX = find_if(cells.begin(), cells.end(), [&row](const Cell& cell){ return cell.x == row;});
-		auto updateY = find_if(cells.begin(), cells.end(), [&col](const Cell& cell){ return cell.y == col;});
+		int boxStartX((row/boxSizeY)*boxSizeY), boxEndX(boxStartX+boxSizeY);
+		int boxStartY((col/boxSizeX)*boxSizeX), boxEndY(boxStartY+boxSizeX);
 
-		while(updateX != cells.end()){
-			updateX->removeValueFromSet(numRemoved);
-			updateX = find_if(next(updateX), cells.end(), [&row](const Cell& cell){ return cell.x == row;});
-		}
+		auto update = find_if(cells.begin(), cells.end(), [&row,&col,&boxStartY,&boxStartX,&boxEndY,&boxEndX](const Cell& cell){
+			return cell.x == row || cell.y == col || (cell.x >= boxStartX && cell.x < boxEndX && cell.y >= boxStartY && cell.y < boxEndY);
+		});
 
-		while(updateY != cells.end()){
-			updateY->removeValueFromSet(numRemoved);
-			updateY = find_if(next(updateY), cells.end(), [&col](const Cell& cell){ return cell.y == col;});
-		}
-
-		for (int x = (row/boxSizeY)*boxSizeY; x < (row/boxSizeY)*boxSizeY+boxSizeY; ++x){
-			for (int y = (col/boxSizeX)*boxSizeX; y < (col/boxSizeX)*boxSizeX+boxSizeX; ++y){
-				auto updateBox = find_if(cells.begin(), cells.end(), [&x,&y](const Cell& cell){ return cell.x == x && cell.y == y;});
-				if(updateBox != cells.end()){
-					updateBox->removeValueFromSet(numRemoved);
-				}
-			}
+		while (update != cells.end()){
+			update->removeValueFromSet(numRemoved);
+			update = find_if(next(update), cells.end(), [&row,&col,&boxStartY,&boxStartX,&boxEndY,&boxEndX](const Cell& cell){
+				return cell.x == row || cell.y == col || (cell.x >= boxStartX && cell.x < boxEndX && cell.y >= boxStartY && cell.y < boxEndY);
+			});
 		}
 
 		sort_heap(cells.begin(),cells.end(), [](const Cell& lhs, const Cell& rhs){
