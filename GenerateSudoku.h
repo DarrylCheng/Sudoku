@@ -11,12 +11,15 @@
 #include "DifficultyLevels/Difficult.h"
 #include "DifficultyLevels/Evil.h"
 #include "SudokuBoard.h"
+#include <iostream>
+using namespace std;
 
 class GenerateSudoku{
 public:
 	SudokuBoard generate(Level level, int dimension){
 		// Returns a randomly generated sudoku board
 		SudokuBoard board(dimension);
+		cout << "Generating complete sudoku...(Abort if it takes too long)";
 		while(!lasVegas(board)){}
 
 		SudokuDifficulty * sd;
@@ -34,6 +37,7 @@ public:
 				sd = new Evil();
 				break;
 		}
+		cout << "Proceeding holes digging...\n";
 
 		//In case if digging holes will cause the sudoku to be unsolvable, might need some modifications here
 		sd->digHoles(board);
