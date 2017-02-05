@@ -68,7 +68,6 @@ int main(int argc, char * argv[]){
 		end = chrono::high_resolution_clock::now();
 		auto durationBT = duration_cast<milliseconds>( end - start ).count();
 		if(solvableBT){
-			pz1.print();
 			cout << "Time elapsed (BTSolving): " << durationBT << "ms\n";
 		} else {
 			cout << "Sudoku board is not solvable.\n";
